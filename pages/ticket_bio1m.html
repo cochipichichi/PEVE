@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="es"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Ticket de salida — PEVE</title>
+<link rel="stylesheet" href="../assets/style.css">
+<script defer src="../assets/app.js"></script>
+<script defer src="../assets/api.js"></script>
+</head>
+<body>
+
+<header class="header">
+  <div class="logo">
+    <span class="badge">PEVE</span>
+    <span class="title">Plataforma Exámenes de Validación de Estudios</span>
+  </div>
+  <div class="row">
+    <button class="toggle" data-action="fs-dec">A−</button>
+    <button class="toggle" data-action="fs-inc">A+</button>
+    <button class="toggle" data-action="contrast">🌓 Alto contraste</button>
+  </div>
+</header>
+
+<main>
+  <h2>🎟️ Ticket de salida</h2>
+  <div class="card">
+    <label>Hoy aprendí que...</label>
+    <textarea rows="4" placeholder="Escribe aquí"></textarea>
+    <label>Una duda que me queda es...</label>
+    <textarea rows="3" placeholder="Escribe aquí"></textarea>
+    <label>Lo explicaré con un ejemplo de...</label>
+    <textarea rows="3" placeholder="Escribe aquí"></textarea>
+    <div class="row"><button class="btn" onclick="sendTicket()">Guardar</button></div>
+    <small class="notice">Para guardar real, conectar con planilla/API.</small>
+  </div>
+</main>
+
+<footer class="footer">
+  <div>Proyecto Exámenes Libres — Pancho & Belén</div>
+  <div>belen.acpe@gmail.com · 📞 +56 9 6266 4960</div>
+  <div>👨‍💻 Francisco Pinto — 📧 franciscoandresp@gmail.com · 📞 +56 9 2002 7992</div>
+  <div>Hecho con ❤️ para el Liceo Bicentenario de Excelencia Polivalente San Nicolás</div>
+</footer>
+
+</body></html>
+
+<script>
+async function sendTicket(){
+  const ta = document.querySelectorAll('textarea');
+  const payload = {
+    learned: ta[0].value, doubt: ta[1].value, example: ta[2].value,
+    course: 'Biología 1M', module: 'Ticket salida', timestamp: new Date().toISOString()
+  };
+  try{
+    const u = getSession() || {id:'anon', name:'Anónimo'};
+    payload.userId = u.id; payload.userName = u.name || 'Anónimo';
+    const resp = await PEVE_API.pevePost('ticket_submit', payload);
+    alert('Ticket guardado: ' + (resp.status||'ok'));
+  }catch(e){ alert('No se pudo guardar el ticket'); }
+}
+</script>

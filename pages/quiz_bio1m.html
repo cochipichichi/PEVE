@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="es"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Quiz Biología 1M — PEVE</title>
+<link rel="stylesheet" href="../assets/style.css">
+<script defer src="../assets/app.js"></script>
+<script>
+async function evalQuiz() {
+  let score = 0;
+  if(document.querySelector('input[name=q1]:checked')?.value==='b') score+=1;
+  if(document.querySelector('input[name=q2]:checked')?.value==='a') score+=1;
+  $('#out').textContent = `Puntaje: ${score} / 2`;
+  // Enviar a Google Sheets vía Apps Script
+  try{
+    const u = getSession() || {id:'anon', name:'Anónimo'};
+    const resp = await PEVE_API.pevePost('quiz_submit', {
+      userId: u.id, userName: u.name || 'Anónimo',
+      course: 'Biología 1M', module: 'OA2+OA6',
+      q1: document.querySelector('input[name=q1]:checked')?.value || null,
+      q2: document.querySelector('input[name=q2]:checked')?.value || null,
+      score, max: 2, timestamp: new Date().toISOString()
+    });
+    $('#out').textContent += ' — Guardado: ' + (resp.status||'ok');
+  }catch(e){ $('#out').textContent += ' — No se pudo guardar'; }
+}
+</script>
+<script defer src="../assets/api.js"></script>
+</head>
+<body>
+
+<header class="header">
+  <div class="logo">
+    <span class="badge">PEVE</span>
+    <span class="title">Plataforma Exámenes de Validación de Estudios</span>
+  </div>
+  <div class="row">
+    <button class="toggle" data-action="fs-dec">A−</button>
+    <button class="toggle" data-action="fs-inc">A+</button>
+    <button class="toggle" data-action="contrast">🌓 Alto contraste</button>
+  </div>
+</header>
+
+<main>
+  <h2>🧪 Quiz — OA2 & OA6</h2>
+  <div class="card">
+    <p><b>1.</b> ¿Cuál es una evidencia de la evolución?</p>
+    <label><input type="radio" name="q1" value="a"> Estructuras análogas</label><br/>
+    <label><input type="radio" name="q1" value="b"> Registro fósil</label><br/>
+    <label><input type="radio" name="q1" value="c"> Cambios de clima</label>
+  </div>
+  <div class="card">
+    <p><b>2.</b> En el ciclo del carbono, ¿qué proceso fija CO₂ en biomasa?</p>
+    <label><input type="radio" name="q2" value="a"> Fotosíntesis</label><br/>
+    <label><input type="radio" name="q2" value="b"> Respiración</label><br/>
+    <label><input type="radio" name="q2" value="c"> Combustión</label>
+  </div>
+  <button class="btn green" onclick="evalQuiz()">Calcular</button>
+  <p id="out" class="notice">—</p>
+</main>
+
+<footer class="footer">
+  <div>Proyecto Exámenes Libres — Pancho & Belén</div>
+  <div>belen.acpe@gmail.com · 📞 +56 9 6266 4960</div>
+  <div>👨‍💻 Francisco Pinto — 📧 franciscoandresp@gmail.com · 📞 +56 9 2002 7992</div>
+  <div>Hecho con ❤️ para el Liceo Bicentenario de Excelencia Polivalente San Nicolás</div>
+</footer>
+
+</body></html>
