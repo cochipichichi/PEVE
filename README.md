@@ -39,3 +39,26 @@ Repositorio base listo para GitHub Pages / hosting estático. Incluye:
 ## Integración con Google Sheets (Apps Script)
 - Configura tu Web App con el archivo `apps-script/Code.gs` y apunta `data/config.json` → `scriptUrl`.
 - Páginas integradas: `quiz_bio1m.html`, `ticket_bio1m.html`, `app/admin.html` (crear + listar usuarios).
+
+
+## Sprint v1.2 — CRUD + Dashboard + Evidencias + 3D/AR/VR
+- Admin: cursos (`course_create`, `course_list`) y asignaciones (`assign_course`, `assign_list`).
+- Docente: estadísticas reales desde Sheets (`stats_by_course`, `stats_by_student`) y exportable PDF (`export_pdf`).
+- Evidencias: subida a Drive con base64 (`evidence_submit`) y metadatos (userId, courseId, OA).
+- Visores: `<model-viewer>` listo, coloca tus `.glb` en `assets/models/` y renombra `model.glb`.
+
+
+## v1.3 — Sembrado rápido de asignaturas (1° Medio)
+- Nueva página: `pages/asignaturas.html` con OA sugeridos por asignatura.
+- Botón **🌱 Sembrar en Admin** (uno o todos) → crea/actualiza cursos en Google Sheets vía Apps Script.
+- **Prefill Admin**: manda el curso seleccionado a `app/admin.html` para editar/guardar al tiro.
+- Archivo `data/courses_seed.json` con: BIO1M, LEN1M, MAT1M, FIS1M, QUI1M, HIS1M, ING1M.
+- Extractos de OA en `data/oa_extracts.json` para guiar a docentes/estudiantes.
+
+
+## v1.4 — Anti-duplicados + Gráficos en Dashboard
+- **Admin → assign_course** ahora actualiza si ya existe (userId+courseId) para evitar duplicados.
+- **Admin → user_create** también actualiza por `id` si el usuario ya existe.
+- **Docente** integra **Chart.js** con 2 gráficos:
+  - **Por curso**: barras con Promedio vs Intentos por OA.
+  - **Por estudiante**: línea con promedios por Curso‑OA.

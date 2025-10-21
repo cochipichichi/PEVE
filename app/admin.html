@@ -79,7 +79,77 @@ window.addEventListener('DOMContentLoaded', async()=>{
       <table class="table"><thead><tr><th>ID</th><th>Nombre</th><th>Rol</th><th>Correo</th></tr></thead><tbody id="users-remote"></tbody></table>
     </div>
   </div>
+
+  <div class="grid">
+    <div class="card">
+      <h3>📚 Cursos/Asignaturas</h3>
+      <div class="row">
+        <input id="c_id" placeholder="ID curso (ej: BIO1M)">
+        <input id="c_name" placeholder="Nombre (Biología 1° Medio)">
+        <input id="c_oas" placeholder="OA separadas por coma (OA2,OA4,OA6,OA8)">
+        <button class="btn green" onclick="createCourse()">Crear/Actualizar</button>
+        <button class="btn" onclick="listCourses()">Listar</button>
+      </div>
+      <div class="row" style="margin:8px 0"><button class="btn" onclick="seedSuggested()">🌱 Sembrar sugeridos</button></div><table class="table"><thead><tr><th>ID</th><th>Nombre</th><th>OA</th></tr></thead><tbody id="courses-body"></tbody></table>
+    </div>
+
+    <div class="card">
+      <h3>👥 Asignación Usuario ↔ Curso</h3>
+      <div class="row">
+        <input id="as_user" placeholder="userId (ej: est1)">
+        <input id="as_course" placeholder="courseId (ej: BIO1M)">
+        <input id="as_oas" placeholder="OA autorizadas (ej: OA2,OA4)">
+        <button class="btn purple" onclick="assignCourse()">Asignar</button>
+        <button class="btn" onclick="listAssignments()">Ver asignaciones</button>
+      </div>
+      <table class="table"><thead><tr><th>userId</th><th>courseId</th><th>OA</th></tr></thead><tbody id="assign-body"></tbody></table>
+    </div>
+  </div>
 </main>
+<script>
+async function createCourse(){
+  const payload = {
+    id: $('#c_id').value.trim(),
+    name: $('#c_name').value.trim(),
+    oas: $('#c_oas').value.split(',').map(s=>s.trim()).filter(Boolean)
+  };
+  if(!payload.id || !payload.name){ return alert('Falta ID/Nombre'); }
+  const r = await PEVE_ADMIN.peveCreateCourse(payload).catch(e=>alert('Error al crear curso'));
+  if(r) alert(r.message||'Curso guardado');
+}
+
+async function listCourses(){
+  const r = await PEVE_ADMIN.peveListCourses().catch(e=>alert('No se pudo listar cursos'));
+  const tb = $('#courses-body'); tb.innerHTML='';
+  (r.rows||[]).forEach(c=>{
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td>${c.id}</td><td>${c.name}</td><td>${(c.oas||[]).join(', ')}</td>`;
+    tb.appendChild(tr);
+  });
+}
+
+async function assignCourse(){
+  const payload = {
+    userId: $('#as_user').value.trim(),
+    courseId: $('#as_course').value.trim(),
+    oas: $('#as_oas').value.split(',').map(s=>s.trim()).filter(Boolean)
+  };
+  if(!payload.userId || !payload.courseId){ return alert('Faltan campos'); }
+  const r = await PEVE_ADMIN.peveAssignCourse(payload).catch(e=>alert('No se pudo asignar'));
+  if(r) alert(r.message||'Asignado');
+}
+
+async function listAssignments(){
+  const r = await PEVE_ADMIN.peveListAssignments({}).catch(e=>alert('No se pudo listar'));
+  const tb = $('#assign-body'); tb.innerHTML='';
+  (r.rows||[]).forEach(a=>{
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td>${a.userId}</td><td>${a.courseId}</td><td>${(a.oas||[]).join(', ')}</td>`;
+    tb.appendChild(tr);
+  });
+}
+</script>
+
 <script>
 async function createUser(){
   const payload = {
@@ -113,3 +183,24 @@ async function loadUsers(){
 </footer>
 
 </body></html>
+
+<script>
+window.addEventListener('DOMContentLoaded', async()=>{
+  try{
+    const s = localStorage.getItem('peve.prefillCourse');
+    if(s){
+      const c = JSON.parse(s);
+      $('#c_id').value = c.id || '';
+      $('#c_name').value = c.name || '';
+      $('#c_oas').value = (c.oas||[]).join(',');
+      localStorage.removeItem('peve.prefillCourse');
+    }
+  }catch(_){}
+});
+
+async function seedSuggested(){
+  const seeds = await fetch('../data/courses_seed.json').then(r=>r.json());
+  for(const c of seeds){ try{ await PEVE_ADMIN.peveCreateCourse(c); }catch(e){} }
+  alert('Cursos sugeridos sembrados en Sheets');
+}
+</script>

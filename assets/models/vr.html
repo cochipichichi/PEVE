@@ -1,11 +1,16 @@
 <!doctype html>
-<html lang="es"><head>
+<html lang="es">
+<head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Visor VR — PEVE</title>
 <link rel="stylesheet" href="../style.css">
-</head><body>
+<script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+</head>
+<body>
 <main style="padding:24px">
-  <h2>🥽 Visor VR (placeholder)</h2>
-  <p>Reemplaza este archivo con tu visor model-viewer o Three.js. Carga los .glb desde esta misma carpeta.</p>
+  <h2>🥽 Visor VR</h2>
+  <p class="notice">Coloca tus modelos .glb en esta carpeta. Cambia el atributo <code>src</code> para apuntar al archivo real.</p>
+  <model-viewer src="model.glb" alt="Modelo 3D" camera-controls autoplay shadow-intensity="1" style="width:100%;height:70vh; background:#0b0f14;"></model-viewer>
+  <p>Para VR avanzada puedes integrar Three.js + WebXR.</p>
 </main>
 </body></html>

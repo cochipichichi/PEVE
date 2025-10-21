@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="es"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Asignaturas por nivel — PEVE</title>
+<link rel="stylesheet" href="../assets/style.css">
+<script defer src="../assets/app.js"></script>
+<script defer src="../assets/api.js"></script>
+</head>
+<body>
+<header class="header">
+  <div class="logo"><span class="badge">PEVE</span><span class="title">Plataforma Exámenes — Asignaturas por nivel</span></div>
+  <div class="row">
+    <button class="toggle" data-action="fs-dec">A−</button>
+    <button class="toggle" data-action="fs-inc">A+</button>
+    <button class="toggle" data-action="contrast">🌓 Alto contraste</button>
+  </div>
+</header>
+<main>
+  <h2>📚 1° Medio — Asignaturas y OA sugeridos</h2>
+  <p class="notice">Usa <b>Sembrar en Admin</b> para precargar estos cursos en tu Google Sheets (requiere configurar <code>data/config.json</code> con tu WebApp de Apps Script).</p>
+  <div id="list"></div>
+  <div class="row" style="margin-top:16px">
+    <button class="btn green" onclick="seedAll()">🌱 Sembrar en Admin (todos)</button>
+    <a class="btn" href="../app/admin.html">🛠️ Ir a Admin</a>
+  </div>
+</main>
+<script>
+async function render(){
+  const seeds = await fetch('../data/courses_seed.json').then(r=>r.json());
+  const extracts = await fetch('../data/oa_extracts.json').then(r=>r.json());
+  const ctn = document.getElementById('list'); ctn.innerHTML='';
+  seeds.forEach(c=>{
+    const wrap = document.createElement('div'); wrap.className='card';
+    const oaList = (c.oas||[]).map(code=>{
+      const ex = (extracts[c.id]||{})[code] || '';
+      return `<li><b>${code}</b> — ${ex}</li>`;
+    }).join('');
+    wrap.innerHTML = `<h3>${c.name} <small class="tag">${c.id}</small></h3>
+      <ul>${oaList}</ul>
+      <div class="row">
+        <button class="btn" onclick='seedOne(${JSON.stringify(c)})'>🌱 Sembrar en Admin</button>
+        <button class="btn purple" onclick='prefillAdmin(${JSON.stringify(c)})'>✍️ Prefill Admin</button>
+      </div>`;
+    ctn.appendChild(wrap);
+  });
+}
+async function seedOne(course){
+  try{
+    const r = await PEVE_ADMIN.peveCreateCourse(course);
+    alert((r && r.message) || 'Curso sembrado');
+  }catch(e){ alert('No se pudo sembrar'); }
+}
+async function seedAll(){
+  const seeds = await fetch('../data/courses_seed.json').then(r=>r.json());
+  for(const c of seeds){ try{ await PEVE_ADMIN.peveCreateCourse(c); }catch(e){} }
+  alert('Cursos sembrados');
+}
+function prefillAdmin(course){
+  localStorage.setItem('peve.prefillCourse', JSON.stringify(course));
+  location.href = '../app/admin.html';
+}
+render();
+</script>
+</body></html>

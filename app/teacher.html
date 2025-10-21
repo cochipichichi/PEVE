@@ -3,7 +3,70 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Profesor — PEVE</title>
 <link rel="stylesheet" href="../assets/style.css">
-<script defer src="../assets/app.js"></script>
+<script defer src="../assets/app.js">
+let chartCourse, chartStudent;
+function renderCourseChart(rows){
+  const ctx = document.getElementById('chart-course').getContext('2d');
+  const labels = rows.map(r=>r.oa);
+  const dataAvg = rows.map(r=>Number(r.promedio));
+  const dataAtt = rows.map(r=>Number(r.intentos));
+  if(chartCourse) chartCourse.destroy();
+  chartCourse = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels,
+      datasets: [
+        {label:'Promedio', data: dataAvg},
+        {label:'Intentos', data: dataAtt}
+      ]
+    },
+    options: {responsive:true, maintainAspectRatio:false}
+  });
+}
+function renderStudentChart(rows){
+  const ctx = document.getElementById('chart-student').getContext('2d');
+  const labels = rows.map(r=>`${r.courseId}-${r.oa}`);
+  const dataAvg = rows.map(r=>Number(r.promedio));
+  if(chartStudent) chartStudent.destroy();
+  chartStudent = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [
+        {label:'Promedio', data: dataAvg}
+      ]
+    },
+    options: {responsive:true, maintainAspectRatio:false}
+  });
+}
+
+async function loadStatsCourse(){
+  const id = $('#st_course').value.trim();
+  if(!id) return alert('Ingresa courseId');
+  const r = await PEVE_ADMIN.peveStatsByCourse(id).catch(e=>alert('No se pudo cargar'));
+  const tb = document.querySelector('#stats-course tbody'); tb.innerHTML='';
+  (r.rows||[]).forEach(x=>{
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td>${x.oa}</td><td>${x.intentos}</td><td>${x.promedio}</td>`;
+    tb.appendChild(tr);
+  });
+  renderCourseChart(r.rows||[]);
+}
+
+async function loadStatsStudent(){
+  const id = $('#st_user').value.trim();
+  if(!id) return alert('Ingresa userId');
+  const r = await PEVE_ADMIN.peveStatsByStudent(id).catch(e=>alert('No se pudo cargar'));
+  const tb = document.querySelector('#stats-student tbody'); tb.innerHTML='';
+  (r.rows||[]).forEach(x=>{
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td>${x.courseId}</td><td>${x.oa}</td><td>${x.intentos}</td><td>${x.promedio}</td>`;
+    tb.appendChild(tr);
+  });
+  renderStudentChart(r.rows||[]);
+}
+</script>
+
 <script>
 window.addEventListener('DOMContentLoaded', async()=>{
   const u = getSession(); if(!u || u.role!=='teacher') return location.href='login.html';
@@ -12,8 +75,198 @@ window.addEventListener('DOMContentLoaded', async()=>{
   const oaList = $('#oa');
   course.oas.forEach(oa=>{ const li = document.createElement('li'); li.textContent = oa.code+" — "+oa.name; oaList.appendChild(li); });
 });
+
+let chartCourse, chartStudent;
+function renderCourseChart(rows){
+  const ctx = document.getElementById('chart-course').getContext('2d');
+  const labels = rows.map(r=>r.oa);
+  const dataAvg = rows.map(r=>Number(r.promedio));
+  const dataAtt = rows.map(r=>Number(r.intentos));
+  if(chartCourse) chartCourse.destroy();
+  chartCourse = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels,
+      datasets: [
+        {label:'Promedio', data: dataAvg},
+        {label:'Intentos', data: dataAtt}
+      ]
+    },
+    options: {responsive:true, maintainAspectRatio:false}
+  });
+}
+function renderStudentChart(rows){
+  const ctx = document.getElementById('chart-student').getContext('2d');
+  const labels = rows.map(r=>`${r.courseId}-${r.oa}`);
+  const dataAvg = rows.map(r=>Number(r.promedio));
+  if(chartStudent) chartStudent.destroy();
+  chartStudent = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [
+        {label:'Promedio', data: dataAvg}
+      ]
+    },
+    options: {responsive:true, maintainAspectRatio:false}
+  });
+}
+
+async function loadStatsCourse(){
+  const id = $('#st_course').value.trim();
+  if(!id) return alert('Ingresa courseId');
+  const r = await PEVE_ADMIN.peveStatsByCourse(id).catch(e=>alert('No se pudo cargar'));
+  const tb = document.querySelector('#stats-course tbody'); tb.innerHTML='';
+  (r.rows||[]).forEach(x=>{
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td>${x.oa}</td><td>${x.intentos}</td><td>${x.promedio}</td>`;
+    tb.appendChild(tr);
+  });
+  renderCourseChart(r.rows||[]);
+}
+
+async function loadStatsStudent(){
+  const id = $('#st_user').value.trim();
+  if(!id) return alert('Ingresa userId');
+  const r = await PEVE_ADMIN.peveStatsByStudent(id).catch(e=>alert('No se pudo cargar'));
+  const tb = document.querySelector('#stats-student tbody'); tb.innerHTML='';
+  (r.rows||[]).forEach(x=>{
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td>${x.courseId}</td><td>${x.oa}</td><td>${x.intentos}</td><td>${x.promedio}</td>`;
+    tb.appendChild(tr);
+  });
+  renderStudentChart(r.rows||[]);
+}
 </script>
-<script defer src="../assets/api.js"></script>
+
+<script defer src="../assets/api.js">
+let chartCourse, chartStudent;
+function renderCourseChart(rows){
+  const ctx = document.getElementById('chart-course').getContext('2d');
+  const labels = rows.map(r=>r.oa);
+  const dataAvg = rows.map(r=>Number(r.promedio));
+  const dataAtt = rows.map(r=>Number(r.intentos));
+  if(chartCourse) chartCourse.destroy();
+  chartCourse = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels,
+      datasets: [
+        {label:'Promedio', data: dataAvg},
+        {label:'Intentos', data: dataAtt}
+      ]
+    },
+    options: {responsive:true, maintainAspectRatio:false}
+  });
+}
+function renderStudentChart(rows){
+  const ctx = document.getElementById('chart-student').getContext('2d');
+  const labels = rows.map(r=>`${r.courseId}-${r.oa}`);
+  const dataAvg = rows.map(r=>Number(r.promedio));
+  if(chartStudent) chartStudent.destroy();
+  chartStudent = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [
+        {label:'Promedio', data: dataAvg}
+      ]
+    },
+    options: {responsive:true, maintainAspectRatio:false}
+  });
+}
+
+async function loadStatsCourse(){
+  const id = $('#st_course').value.trim();
+  if(!id) return alert('Ingresa courseId');
+  const r = await PEVE_ADMIN.peveStatsByCourse(id).catch(e=>alert('No se pudo cargar'));
+  const tb = document.querySelector('#stats-course tbody'); tb.innerHTML='';
+  (r.rows||[]).forEach(x=>{
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td>${x.oa}</td><td>${x.intentos}</td><td>${x.promedio}</td>`;
+    tb.appendChild(tr);
+  });
+  renderCourseChart(r.rows||[]);
+}
+
+async function loadStatsStudent(){
+  const id = $('#st_user').value.trim();
+  if(!id) return alert('Ingresa userId');
+  const r = await PEVE_ADMIN.peveStatsByStudent(id).catch(e=>alert('No se pudo cargar'));
+  const tb = document.querySelector('#stats-student tbody'); tb.innerHTML='';
+  (r.rows||[]).forEach(x=>{
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td>${x.courseId}</td><td>${x.oa}</td><td>${x.intentos}</td><td>${x.promedio}</td>`;
+    tb.appendChild(tr);
+  });
+  renderStudentChart(r.rows||[]);
+}
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js">
+let chartCourse, chartStudent;
+function renderCourseChart(rows){
+  const ctx = document.getElementById('chart-course').getContext('2d');
+  const labels = rows.map(r=>r.oa);
+  const dataAvg = rows.map(r=>Number(r.promedio));
+  const dataAtt = rows.map(r=>Number(r.intentos));
+  if(chartCourse) chartCourse.destroy();
+  chartCourse = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels,
+      datasets: [
+        {label:'Promedio', data: dataAvg},
+        {label:'Intentos', data: dataAtt}
+      ]
+    },
+    options: {responsive:true, maintainAspectRatio:false}
+  });
+}
+function renderStudentChart(rows){
+  const ctx = document.getElementById('chart-student').getContext('2d');
+  const labels = rows.map(r=>`${r.courseId}-${r.oa}`);
+  const dataAvg = rows.map(r=>Number(r.promedio));
+  if(chartStudent) chartStudent.destroy();
+  chartStudent = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [
+        {label:'Promedio', data: dataAvg}
+      ]
+    },
+    options: {responsive:true, maintainAspectRatio:false}
+  });
+}
+
+async function loadStatsCourse(){
+  const id = $('#st_course').value.trim();
+  if(!id) return alert('Ingresa courseId');
+  const r = await PEVE_ADMIN.peveStatsByCourse(id).catch(e=>alert('No se pudo cargar'));
+  const tb = document.querySelector('#stats-course tbody'); tb.innerHTML='';
+  (r.rows||[]).forEach(x=>{
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td>${x.oa}</td><td>${x.intentos}</td><td>${x.promedio}</td>`;
+    tb.appendChild(tr);
+  });
+  renderCourseChart(r.rows||[]);
+}
+
+async function loadStatsStudent(){
+  const id = $('#st_user').value.trim();
+  if(!id) return alert('Ingresa userId');
+  const r = await PEVE_ADMIN.peveStatsByStudent(id).catch(e=>alert('No se pudo cargar'));
+  const tb = document.querySelector('#stats-student tbody'); tb.innerHTML='';
+  (r.rows||[]).forEach(x=>{
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td>${x.courseId}</td><td>${x.oa}</td><td>${x.intentos}</td><td>${x.promedio}</td>`;
+    tb.appendChild(tr);
+  });
+  renderStudentChart(r.rows||[]);
+}
+</script>
+
 </head>
 <body>
 
@@ -53,7 +306,152 @@ window.addEventListener('DOMContentLoaded', async()=>{
       <small>Conectar a Google Sheets o una API para datos reales.</small>
     </div>
   </div>
+
+  <div class="grid">
+    <div class="card">
+      <h3>📊 Estadísticas por curso (Sheets)</h3>
+      <div class="row">
+        <input id="st_course" placeholder="courseId (ej: BIO1M)">
+        <button class="btn" onclick="loadStatsCourse()">Cargar</button>
+        <button class="btn" onclick="exportPDF()">Exportar PDF</button>
+      </div>
+      <table class="table" id="stats-course"><thead><tr><th>OA</th><th>Intentos</th><th>Promedio</th></tr></thead><tbody></tbody></table>
+<canvas id="chart-course" style="max-height:320px"></canvas>
+    </div>
+    <div class="card">
+      <h3>👤 Estadísticas por estudiante</h3>
+      <div class="row">
+        <input id="st_user" placeholder="userId (ej: est1)">
+        <button class="btn" onclick="loadStatsStudent()">Cargar</button>
+      </div>
+      <table class="table" id="stats-student"><thead><tr><th>Curso</th><th>OA</th><th>Intentos</th><th>Promedio</th></tr></thead><tbody></tbody></table>
+<canvas id="chart-student" style="max-height:320px"></canvas>
+    </div>
+
+    <div class="card">
+      <h3>📎 Adjuntar evidencia (Drive)</h3>
+      <p>Sube un archivo (PDF/imagen) como evidencia vinculada a un OA.</p>
+      <div class="row">
+        <input id="ev_user" placeholder="userId">
+        <input id="ev_course" placeholder="courseId">
+        <input id="ev_oa" placeholder="OA (ej: OA2)">
+      </div>
+      <input type="file" id="ev_file" accept="image/*,application/pdf">
+      <div class="row"><button class="btn green" onclick="uploadEvidence()">Subir</button></div>
+      <p id="ev_out" class="notice">—</p>
+    </div>
+  </div>
 </main>
+<script>
+async function loadStatsCourse(){
+  const id = $('#st_course').value.trim();
+  if(!id) return alert('Ingresa courseId');
+  const r = await PEVE_ADMIN.peveStatsByCourse(id).catch(e=>alert('No se pudo cargar'));
+  const tb = document.querySelector('#stats-course tbody'); tb.innerHTML='';
+  (r.rows||[]).forEach(x=>{
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td>${x.oa}</td><td>${x.intentos}</td><td>${x.promedio}</td>`;
+    tb.appendChild(tr);
+  });
+}
+
+async function loadStatsStudent(){
+  const id = $('#st_user').value.trim();
+  if(!id) return alert('Ingresa userId');
+  const r = await PEVE_ADMIN.peveStatsByStudent(id).catch(e=>alert('No se pudo cargar'));
+  const tb = document.querySelector('#stats-student tbody'); tb.innerHTML='';
+  (r.rows||[]).forEach(x=>{
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td>${x.courseId}</td><td>${x.oa}</td><td>${x.intentos}</td><td>${x.promedio}</td>`;
+    tb.appendChild(tr);
+  });
+}
+
+async function exportPDF(){
+  const id = $('#st_course').value.trim() || 'SIN_ID';
+  const html = document.querySelector('#stats-course').outerHTML;
+  const r = await PEVE_ADMIN.peveExportPDF('Reporte_'+id, html).catch(e=>alert('No se pudo exportar'));
+  if(r && r.pdfUrl) window.open(r.pdfUrl, '_blank');
+}
+
+async function uploadEvidence(){
+  const f = $('#ev_file').files[0];
+  if(!f) return alert('Selecciona archivo');
+  const meta = {
+    userId: $('#ev_user').value.trim(),
+    courseId: $('#ev_course').value.trim(),
+    oa: $('#ev_oa').value.trim()
+  };
+  const arr = await f.arrayBuffer();
+  const base64 = btoa(String.fromCharCode(...new Uint8Array(arr)));
+  const r = await PEVE_ADMIN.peveUploadEvidence(f.name, f.type, base64, meta).catch(e=>$('#ev_out').textContent='Error');
+  if(r && r.fileUrl) $('#ev_out').textContent = 'Evidencia subida: ' + r.fileUrl; else $('#ev_out').textContent='Sin URL';
+}
+
+let chartCourse, chartStudent;
+function renderCourseChart(rows){
+  const ctx = document.getElementById('chart-course').getContext('2d');
+  const labels = rows.map(r=>r.oa);
+  const dataAvg = rows.map(r=>Number(r.promedio));
+  const dataAtt = rows.map(r=>Number(r.intentos));
+  if(chartCourse) chartCourse.destroy();
+  chartCourse = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels,
+      datasets: [
+        {label:'Promedio', data: dataAvg},
+        {label:'Intentos', data: dataAtt}
+      ]
+    },
+    options: {responsive:true, maintainAspectRatio:false}
+  });
+}
+function renderStudentChart(rows){
+  const ctx = document.getElementById('chart-student').getContext('2d');
+  const labels = rows.map(r=>`${r.courseId}-${r.oa}`);
+  const dataAvg = rows.map(r=>Number(r.promedio));
+  if(chartStudent) chartStudent.destroy();
+  chartStudent = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [
+        {label:'Promedio', data: dataAvg}
+      ]
+    },
+    options: {responsive:true, maintainAspectRatio:false}
+  });
+}
+
+async function loadStatsCourse(){
+  const id = $('#st_course').value.trim();
+  if(!id) return alert('Ingresa courseId');
+  const r = await PEVE_ADMIN.peveStatsByCourse(id).catch(e=>alert('No se pudo cargar'));
+  const tb = document.querySelector('#stats-course tbody'); tb.innerHTML='';
+  (r.rows||[]).forEach(x=>{
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td>${x.oa}</td><td>${x.intentos}</td><td>${x.promedio}</td>`;
+    tb.appendChild(tr);
+  });
+  renderCourseChart(r.rows||[]);
+}
+
+async function loadStatsStudent(){
+  const id = $('#st_user').value.trim();
+  if(!id) return alert('Ingresa userId');
+  const r = await PEVE_ADMIN.peveStatsByStudent(id).catch(e=>alert('No se pudo cargar'));
+  const tb = document.querySelector('#stats-student tbody'); tb.innerHTML='';
+  (r.rows||[]).forEach(x=>{
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td>${x.courseId}</td><td>${x.oa}</td><td>${x.intentos}</td><td>${x.promedio}</td>`;
+    tb.appendChild(tr);
+  });
+  renderStudentChart(r.rows||[]);
+}
+</script>
+
+
 
 <footer class="footer">
   <div>Proyecto Exámenes Libres — Pancho & Belén</div>
