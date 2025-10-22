@@ -1,7 +1,7 @@
 
 async function peveConfig(){
   if(!window.__peve_cfg){
-    window.__peve_cfg = await fetch('/data/config.json').then(r=>r.json()).catch(()=>({scriptUrl:null, timezone:'America/Santiago'}));
+    window.__peve_cfg = await fetch("./data/config.json").then(r=>r.json()).catch(()=>({scriptUrl:null, timezone:'America/Santiago'}));
   }
   return window.__peve_cfg;
 }

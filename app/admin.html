@@ -19,7 +19,33 @@ window.addEventListener('DOMContentLoaded', async()=>{
 </script>
 <script defer src="../assets/api.js"></script>
 </head>
-<body>
+\1
+<div id="connection-status" style="padding:10px;margin:8px;border-radius:8px;font-weight:600;">Verificando conexión…</div>
+<script>
+(async function(){
+  try{
+    const cfg = await (window.peveConfig ? peveConfig() : (await fetch('./data/config.json').then(r=>r.json()).catch(()=>({scriptUrl:null}))));
+    const el = document.getElementById('connection-status');
+    if(!el) return;
+    if(cfg && cfg.scriptUrl){
+      el.textContent = '🔌 Conexión a backend: OK';
+      el.style.background = '#e6ffed'; el.style.color = '#03543f';
+      el.style.border = '1px solid #84e1bc';
+    }else{
+      el.innerHTML = '⚠️ Conexión a backend: <b>No configurado</b> — agrega tu Google Apps Script WebApp en <code>data/config.json</code> (propiedad <code>scriptUrl</code>).';
+      el.style.background = '#fffbea'; el.style.color = '#723b13';
+      el.style.border = '1px solid #fce588';
+    }
+  }catch(e){
+    const el = document.getElementById('connection-status');
+    if(el){
+      el.textContent = '⚠️ No fue posible verificar la conexión.';
+      el.style.background = '#fff5f5'; el.style.color = '#9b1c1c'; el.style.border = '1px solid #feb2b2';
+    }
+  }
+})();
+</script>
+
 
 <header class="header">
   <div class="logo">

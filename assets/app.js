@@ -26,8 +26,30 @@ document.addEventListener("click", (e)=>{
   if(a==="contrast"){ toggleContrast(); }
   if(a==="fs-inc"){ fontDelta(1); }
   if(a==="fs-dec"){ fontDelta(-1); }
-  if(a==="logout"){ clearSession(); location.href = "/"; }
+  if(a==="logout"){ clearSession(); location.href="./"; }
 });
 
 // PWA
-if("serviceWorker" in navigator){ navigator.serviceWorker.register("/service-worker.js"); }
+if("serviceWorker" in navigator){ navigator.serviceWorker.register("./service-worker.js"); }
+
+
+// Theme management (light/dark/high-contrast/sepia)
+(function(){
+  const THEMES = ['light','dark','high-contrast','sepia'];
+  function setTheme(t){
+    if(!THEMES.includes(t)) t = 'dark';
+    document.documentElement.setAttribute('data-theme', t);
+    localStorage.setItem('peve.theme', t);
+    const meta = document.querySelector('meta[name="theme-color"]');
+    const color = getComputedStyle(document.documentElement).getPropertyValue('--bg').trim();
+    if(meta && color) meta.setAttribute('content', color);
+  }
+  function initTheme(){
+    const t = localStorage.getItem('peve.theme') || 'dark';
+    setTheme(t);
+  }
+  window.setTheme = setTheme;
+  window.initTheme = initTheme;
+  if (document.readyState !== 'loading') initTheme();
+  else document.addEventListener('DOMContentLoaded', initTheme);
+})();
