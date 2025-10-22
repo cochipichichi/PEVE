@@ -1,20 +1,9 @@
 <!doctype html>
 <html lang="es"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Estudiante — PEVE</title>
+<title>Temarios — PEVE</title>
 <link rel="stylesheet" href="../assets/style.css">
 <script defer src="../assets/app.js"></script>
-<script>
-window.addEventListener('DOMContentLoaded', async()=>{
-  const u = getSession(); if(!u || u.role!=='student') return location.href='login.html';
-  $('#who').textContent = u.name;
-  const course = await fetch('../data/courses.json').then(r=>r.json()).then(j=>j["Biología 1M"]);
-  const ctn = $('#res');
-  course.resources.forEach(r=>{ const a = document.createElement('a'); a.className='btn'; a.href=r.href; a.textContent=r.label; ctn.appendChild(a); });
-});
-</script>
-<script defer src="../assets/api.js"></script>
-<meta name="theme-color" content="#0b0f14">
 </head>
 <body>
 
@@ -31,14 +20,14 @@ window.addEventListener('DOMContentLoaded', async()=>{
 </header>
 
 <main>
-  <div class="row" style="justify-content:space-between;align-items:center">
-    <h2>👩‍🎓 Estudiante — <span id="who"></span></h2>
-    <button class="toggle" data-action="logout">Cerrar sesión</button>
-  </div>
-  <div class="card">
-    <h3>Biología 1° Medio — Recursos</h3>
-    <div id="res" class="row"></div>
-  </div>
+  <h2>📚 Temarios</h2>
+  <p>Carpetas integradas desde archivos adjuntos:</p>
+  <ul>
+    <li>docs/importante: <code class='inline'>6 ítems</code></li>
+<li>data/temarios: <code class='inline'>15 ítems</code></li>
+<li>content/ciencias-naturales: <code class='inline'>33 ítems</code></li>
+  </ul>
+  <p class="notice">Organiza aquí accesos por nivel: Básica / Media, y por asignatura.</p>
 </main>
 
 <footer class="footer">

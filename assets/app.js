@@ -53,3 +53,86 @@ if("serviceWorker" in navigator){ navigator.serviceWorker.register("./service-wo
   if (document.readyState !== 'loading') initTheme();
   else document.addEventListener('DOMContentLoaded', initTheme);
 })();
+
+
+// === Topbar + Theme menu logic (v2.1) ===
+(function(){
+  function ensureThemeAPI(){
+    if(!window.setTheme){
+      const THEMES = ['light','dark','high-contrast','sepia'];
+      window.setTheme = function(t){
+        if(!THEMES.includes(t)) t = 'dark';
+        document.documentElement.setAttribute('data-theme', t);
+        localStorage.setItem('peve.theme', t);
+        const meta = document.querySelector('meta[name="theme-color"]');
+        const color = getComputedStyle(document.documentElement).getPropertyValue('--bg').trim();
+        if(meta && color) meta.setAttribute('content', color);
+      };
+      window.initTheme = function(){
+        const t = localStorage.getItem('peve.theme') || 'dark';
+        window.setTheme(t);
+      };
+      if (document.readyState !== 'loading') window.initTheme();
+      else document.addEventListener('DOMContentLoaded', window.initTheme);
+    }
+  }
+
+  function buildTopbar(){
+    if(document.querySelector('.topbar')) return; // evitar duplicados
+    const bar = document.createElement('div');
+    bar.className = 'topbar';
+    bar.innerHTML = `
+      <div class="left">
+        <button class="btn" data-action="menu">☰ MENÚ</button>
+        <button class="btn" data-action="back">← ATRÁS</button>
+        <button class="btn" data-action="accept">✔ ACEPTAR</button>
+        <button class="btn" data-action="cancel">✖ CANCELAR</button>
+      </div>
+      <div class="right">
+        <div class="theme-switcher">
+          <button class="btn menu-btn" aria-haspopup="true" aria-expanded="false">🎨 Tema</button>
+          <div class="menu" role="menu">
+            <button role="menuitem" data-theme="light">☀️ Claro</button>
+            <button role="menuitem" data-theme="dark">🌙 Oscuro</button>
+            <button role="menuitem" data-theme="high-contrast">⚡ Alto contraste</button>
+            <button role="menuitem" data-theme="sepia">📜 Sepia</button>
+          </div>
+        </div>
+        <a class="btn" href="./app/evidence.html">🧾 Evidencias</a>
+      </div>
+    `;
+    document.body.prepend(bar);
+
+    const ts = bar.querySelector('.theme-switcher');
+    const btn = ts.querySelector('.menu-btn');
+    const menu = ts.querySelector('.menu');
+    btn.addEventListener('click', ()=>{
+      const open = ts.classList.toggle('open');
+      btn.setAttribute('aria-expanded', open ? 'true':'false');
+    });
+    document.addEventListener('click', (e)=>{
+      if(!ts.contains(e.target)) ts.classList.remove('open');
+    });
+    menu.addEventListener('click', (e)=>{
+      const t = e.target.getAttribute('data-theme');
+      if(t){ window.setTheme(t); ts.classList.remove('open'); }
+    });
+
+    bar.addEventListener('click', (e)=>{
+      const a = e.target.closest('[data-action]')?.getAttribute('data-action');
+      if(!a) return;
+      if(a==='menu'){ document.body.classList.toggle('show-menu'); }
+      if(a==='back'){ history.length > 1 ? history.back() : location.href = './'; }
+      if(a==='accept'){ const form=document.querySelector('form'); if(form){ form.requestSubmit ? form.requestSubmit() : form.submit(); } }
+      if(a==='cancel'){ if(confirm('¿Cancelar y volver al inicio?')) location.href='./'; }
+    });
+  }
+
+  function initTopbar(){
+    ensureThemeAPI();
+    if (document.readyState !== 'loading') buildTopbar();
+    else document.addEventListener('DOMContentLoaded', buildTopbar);
+  }
+  initTopbar();
+})();
+// === Fin v2.1 ===

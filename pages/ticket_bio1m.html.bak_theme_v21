@@ -1,20 +1,10 @@
 <!doctype html>
 <html lang="es"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Estudiante — PEVE</title>
+<title>Ticket de salida — PEVE</title>
 <link rel="stylesheet" href="../assets/style.css">
 <script defer src="../assets/app.js"></script>
-<script>
-window.addEventListener('DOMContentLoaded', async()=>{
-  const u = getSession(); if(!u || u.role!=='student') return location.href='login.html';
-  $('#who').textContent = u.name;
-  const course = await fetch('../data/courses.json').then(r=>r.json()).then(j=>j["Biología 1M"]);
-  const ctn = $('#res');
-  course.resources.forEach(r=>{ const a = document.createElement('a'); a.className='btn'; a.href=r.href; a.textContent=r.label; ctn.appendChild(a); });
-});
-</script>
 <script defer src="../assets/api.js"></script>
-<meta name="theme-color" content="#0b0f14">
 </head>
 <body>
 
@@ -31,13 +21,16 @@ window.addEventListener('DOMContentLoaded', async()=>{
 </header>
 
 <main>
-  <div class="row" style="justify-content:space-between;align-items:center">
-    <h2>👩‍🎓 Estudiante — <span id="who"></span></h2>
-    <button class="toggle" data-action="logout">Cerrar sesión</button>
-  </div>
+  <h2>🎟️ Ticket de salida</h2>
   <div class="card">
-    <h3>Biología 1° Medio — Recursos</h3>
-    <div id="res" class="row"></div>
+    <label>Hoy aprendí que...</label>
+    <textarea rows="4" placeholder="Escribe aquí"></textarea>
+    <label>Una duda que me queda es...</label>
+    <textarea rows="3" placeholder="Escribe aquí"></textarea>
+    <label>Lo explicaré con un ejemplo de...</label>
+    <textarea rows="3" placeholder="Escribe aquí"></textarea>
+    <div class="row"><button class="btn" onclick="sendTicket()">Guardar</button></div>
+    <small class="notice">Para guardar real, conectar con planilla/API.</small>
   </div>
 </main>
 
@@ -49,5 +42,21 @@ window.addEventListener('DOMContentLoaded', async()=>{
   <div>PEVE - Todos los derechos reservados - Prohibida su reproduccion</div>
   <div>PEVE - 2025/2026</div>
 </footer>
-  
+
 </body></html>
+
+<script>
+async function sendTicket(){
+  const ta = document.querySelectorAll('textarea');
+  const payload = {
+    learned: ta[0].value, doubt: ta[1].value, example: ta[2].value,
+    course: 'Biología 1M', module: 'Ticket salida', timestamp: new Date().toISOString()
+  };
+  try{
+    const u = getSession() || {id:'anon', name:'Anónimo'};
+    payload.userId = u.id; payload.userName = u.name || 'Anónimo';
+    const resp = await PEVE_API.pevePost('ticket_submit', payload);
+    alert('Ticket guardado: ' + (resp.status||'ok'));
+  }catch(e){ alert('No se pudo guardar el ticket'); }
+}
+</script>

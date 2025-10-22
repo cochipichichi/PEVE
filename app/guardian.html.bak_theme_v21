@@ -1,20 +1,10 @@
 <!doctype html>
 <html lang="es"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Estudiante — PEVE</title>
+<title>Apoderado — PEVE</title>
 <link rel="stylesheet" href="../assets/style.css">
 <script defer src="../assets/app.js"></script>
-<script>
-window.addEventListener('DOMContentLoaded', async()=>{
-  const u = getSession(); if(!u || u.role!=='student') return location.href='login.html';
-  $('#who').textContent = u.name;
-  const course = await fetch('../data/courses.json').then(r=>r.json()).then(j=>j["Biología 1M"]);
-  const ctn = $('#res');
-  course.resources.forEach(r=>{ const a = document.createElement('a'); a.className='btn'; a.href=r.href; a.textContent=r.label; ctn.appendChild(a); });
-});
-</script>
 <script defer src="../assets/api.js"></script>
-<meta name="theme-color" content="#0b0f14">
 </head>
 <body>
 
@@ -32,12 +22,21 @@ window.addEventListener('DOMContentLoaded', async()=>{
 
 <main>
   <div class="row" style="justify-content:space-between;align-items:center">
-    <h2>👩‍🎓 Estudiante — <span id="who"></span></h2>
+    <h2>👨‍👩‍👧 Apoderado — Seguimiento</h2>
     <button class="toggle" data-action="logout">Cerrar sesión</button>
   </div>
-  <div class="card">
-    <h3>Biología 1° Medio — Recursos</h3>
-    <div id="res" class="row"></div>
+  <div class="grid">
+    <div class="card">
+      <h3>Progreso Estudiante Demo</h3>
+      <table class="table">
+        <tr><th>Módulo</th><th>Estado</th><th>Última actividad</th></tr>
+        <tr><td>OA2 — Evidencias</td><td>✅ Completado</td><td>2025-10-20</td></tr>
+        <tr><td>OA4 — Interacciones</td><td>🕒 En curso</td><td>2025-10-21</td></tr>
+        <tr><td>OA6 — Ciclos</td><td>✅ Completado</td><td>2025-10-19</td></tr>
+        <tr><td>OA8 — Impacto</td><td>⬜ No iniciado</td><td>—</td></tr>
+      </table>
+      <small>Datos simulados para demo. Conectar a planillas o base de datos.</small>
+    </div>
   </div>
 </main>
 
@@ -49,5 +48,5 @@ window.addEventListener('DOMContentLoaded', async()=>{
   <div>PEVE - Todos los derechos reservados - Prohibida su reproduccion</div>
   <div>PEVE - 2025/2026</div>
 </footer>
-  
+
 </body></html>

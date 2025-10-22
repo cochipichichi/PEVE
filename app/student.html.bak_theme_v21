@@ -14,7 +14,6 @@ window.addEventListener('DOMContentLoaded', async()=>{
 });
 </script>
 <script defer src="../assets/api.js"></script>
-<meta name="theme-color" content="#0b0f14">
 </head>
 <body>
 

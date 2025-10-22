@@ -37,27 +37,3 @@ small{color:var(--muted)}
 .hero{display:grid;grid-template-columns:1fr;gap:16px;margin:16px 0 24px}
 .hero h1{margin:0;font-size:28px}
 code.inline{background:#0e1522;border:1px solid var(--border);padding:2px 6px;border-radius:6px}
-
-
-/* === Topbar universal + Theme menu (v2.1) === */
-.topbar{position:sticky;top:0;z-index:999;display:flex;gap:.5rem;align-items:center;justify-content:space-between;padding:.6rem .8rem;background:var(--bg,#0b0f14);border-bottom:1px solid rgba(255,255,255,.08)}
-.topbar .left, .topbar .right{display:flex;gap:.5rem;align-items:center}
-.topbar button, .topbar .menu-btn{border:none;padding:.5rem .7rem;border-radius:.8rem;cursor:pointer;font-weight:600}
-.topbar .btn{background:var(--btn-bg, #1f2937);color:var(--btn-fg, #fff);box-shadow:0 1px 2px rgba(0,0,0,.2)}
-.topbar .btn:focus{outline:3px solid rgba(59,130,246,.6)}
-
-.theme-switcher{position:relative}
-.theme-switcher .menu{position:absolute;right:0;top:120%;min-width:180px;background:var(--bg,#0b0f14);border:1px solid rgba(255,255,255,.12);border-radius:.8rem;padding:.35rem;display:none;box-shadow:0 10px 30px rgba(0,0,0,.35)}
-.theme-switcher.open .menu{display:block}
-.theme-switcher .menu button{display:block;width:100%;text-align:left;background:transparent;padding:.5rem .7rem;border-radius:.6rem}
-.theme-switcher .menu button:hover,.theme-switcher .menu button:focus{background:rgba(255,255,255,.08)}
-
-/* Themes (usar con data-theme en :root) */
-:root[data-theme="light"]{--bg:#f7fafc; --fg:#0b0f14; --btn-bg:#e5e7eb; --btn-fg:#111827}
-:root[data-theme="dark"]{--bg:#0b0f14; --fg:#e5e7eb; --btn-bg:#1f2937; --btn-fg:#fff}
-:root[data-theme="high-contrast"]{--bg:#000; --fg:#fff; --btn-bg:#000; --btn-fg:#fff}
-:root[data-theme="sepia"]{--bg:#f4ecd8; --fg:#3b2f1e; --btn-bg:#e9dfc9; --btn-fg:#3b2f1e}
-
-html,body{background:var(--bg); color:var(--fg);}
-a{color:inherit}
-/* === Fin v2.1 === */

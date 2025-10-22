@@ -267,7 +267,6 @@ async function loadStatsStudent(){
 }
 </script>
 
-<meta name="theme-color" content="#0b0f14">
 </head>
 <body>
 
