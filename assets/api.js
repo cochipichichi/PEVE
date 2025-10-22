@@ -1,9 +1,20 @@
 
+
+function peveWarn(msg){
+  let bar = document.getElementById('peve-warn');
+  if(!bar){
+    bar = document.createElement('div'); bar.id='peve-warn';
+    bar.style.cssText='position:fixed;left:0;right:0;top:0;padding:10px 14px;background:#ff7043;color:#fff;z-index:9999;font-weight:600;text-align:center';
+    document.body.appendChild(bar);
+  }
+  bar.textContent = msg;
+}
+
 async function peveConfig(){
   if(!window.__peve_cfg){
     window.__peve_cfg = await fetch("./data/config.json").then(r=>r.json()).catch(()=>({scriptUrl:null, timezone:'America/Santiago'}));
   }
-  return window.__peve_cfg;
+  if(!window.__peve_cfg.scriptUrl || /REEMPLAZA_CON_TU_WEBAPP_ID/.test(window.__peve_cfg.scriptUrl)){ peveWarn('Configura data/config.json → scriptUrl para habilitar envíos y dashboard'); } return window.__peve_cfg;
 }
 async function pevePost(action, payload){
   const cfg = await peveConfig();
