@@ -70,3 +70,25 @@ a{color:inherit}
 @media (prefers-reduced-motion: reduce){
   *{animation: none !important; transition: none !important}
 }
+
+
+/* === Cards + Solid Pulse Buttons (v1) === */
+.card-grid{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));align-items:stretch}
+.btn.solid{background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(0,0,0,.06)), var(--accent); color:#0a0f14; border-color:transparent}
+.btn.pulse{position:relative; overflow:hidden}
+.btn.pulse::after{
+  content:""; position:absolute; inset:-8px; border-radius:16px; 
+  animation:btnPulse 2.1s infinite ease-in-out; 
+  box-shadow:0 0 0 0 rgba(138,180,248,0.0);
+}
+@keyframes btnPulse {
+  0% { box-shadow:0 0 0 0 rgba(138,180,248,.55); }
+  70%{ box-shadow:0 0 0 14px rgba(138,180,248,0); }
+  100%{ box-shadow:0 0 0 0 rgba(138,180,248,0); }
+}
+.card:hover{transform:translateY(-4px) scale(1.01); transition:transform .2s ease, box-shadow .2s ease;}
+.card .card-actions{margin-top:12px; display:flex; gap:10px; flex-wrap:wrap}
+/* Subtle press effect */
+.btn:active{transform:translateY(0); box-shadow:0 2px 10px rgba(0,0,0,.2)}
+/* Icon bounce on hover */
+.btn:hover svg, .btn:hover .ico{transform:translateY(-1px); transition:transform .2s ease}
