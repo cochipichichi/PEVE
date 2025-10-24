@@ -22,7 +22,7 @@
   <div id="list"></div>
   <div class="row" style="margin-top:16px">
     <button class="btn green" onclick="seedAll()">🌱 Sembrar en Admin (todos)</button>
-    <a class="btn solid pulse" href="../app/admin.html">🛠️ Ir a Admin</a>
+    <a class="btn solid pulse ripple" href="../app/admin.html">🛠️ Ir a Admin</a>
   </div>
 </main>
 <script>
@@ -31,7 +31,7 @@ async function render(){
   const extracts = await fetch('../data/oa_extracts.json').then(r=>r.json());
   const ctn = document.getElementById('list'); ctn.innerHTML='';
   seeds.forEach(c=>{
-    const wrap = document.createElement('div'); wrap.className='card card-tilt';
+    const wrap = document.createElement('div'); wrap.className='card';
     const oaList = (c.oas||[]).map(code=>{
       const ex = (extracts[c.id]||{})[code] || '';
       return `<li><b>${code}</b> — ${ex}</li>`;
@@ -39,7 +39,7 @@ async function render(){
     wrap.innerHTML = `<h3>${c.name} <small class="tag">${c.id}</small></h3>
       <ul>${oaList}</ul>
       <div class="row">
-        <button class="btn solid pulse" onclick='seedOne(${JSON.stringify(c)})'>🌱 Sembrar en Admin</button>
+        <button class="btn solid pulse ripple" onclick='seedOne(${JSON.stringify(c)})'>🌱 Sembrar en Admin</button>
         <button class="btn purple" onclick='prefillAdmin(${JSON.stringify(c)})'>✍️ Prefill Admin</button>
       </div>`;
     ctn.appendChild(wrap);
