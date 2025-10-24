@@ -136,3 +136,21 @@ if("serviceWorker" in navigator){ navigator.serviceWorker.register("./service-wo
   initTopbar();
 })();
 // === Fin v2.1 ===
+
+
+// Ripple click (v2)
+document.addEventListener('click', function(e){
+  const el = e.target.closest('.btn.ripple');
+  if(!el) return;
+  const rect = el.getBoundingClientRect();
+  const s = Math.max(rect.width, rect.height);
+  const d = document.createElement('span');
+  d.className = 'rpl';
+  d.style.width = d.style.height = s + 'px';
+  const x = e.clientX - rect.left - s/2;
+  const y = e.clientY - rect.top - s/2;
+  d.style.left = x + 'px';
+  d.style.top = y + 'px';
+  el.appendChild(d);
+  setTimeout(()=>d.remove(), 600);
+}, {passive:true});

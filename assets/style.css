@@ -92,3 +92,8 @@ a{color:inherit}
 .btn:active{transform:translateY(0); box-shadow:0 2px 10px rgba(0,0,0,.2)}
 /* Icon bounce on hover */
 .btn:hover svg, .btn:hover .ico{transform:translateY(-1px); transition:transform .2s ease}
+
+/* === Ripple Effect (v2) === */
+.btn.ripple{position:relative; overflow:hidden}
+.btn .rpl{position:absolute; border-radius:50%; transform:scale(0); opacity:.45; background:currentColor; pointer-events:none; animation:rpl .6s ease-out}
+@keyframes rpl{to{transform:scale(4); opacity:0}}
